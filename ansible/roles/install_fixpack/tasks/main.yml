@@ -1,0 +1,37 @@
+- name: Check if repo exist
+  stat:
+    path: "{{FP_repo}}"
+  register: repo_stat
+
+- debug:
+    msg: "repo not exist"
+  when: not repo_stat.stat.exists
+
+- name: Check if package exist
+  shell: '{{IM_install_path}}/eclipse/tools/imcl listAvailablePackages -repositories {{FP_repo}} | grep {{FP_package}}'
+  register: package_exists
+  ignore_errors: yes
+
+- debug:
+    msg: "repo not exist"
+  when: FP_package not in package_exists.stdout and repo_stat.stat.exists
+
+- name: Find zip packages
+  find: paths="{{FP_repo}}" patterns="*.zip"
+  register: find_results
+  when: FP_package in package_exists.stdout and repo_stat.stat.exists
+
+- name: Unpack zip packages
+  unarchive: src="{{item.path}}" dest="{{FP_repo}}"
+  with_items: "{{find_results.files}}"
+  when: FP_package in package_exists.stdout and repo_stat.stat.exists
+
+- name: install fixpack
+  become: true
+  become_user: root
+  shell: '{{IM_install_path}}/eclipse/tools/imcl install {{FP_package}} -repositories {{FP_repo}}/repository.config -acceptLicense'
+  register: install_fixpack_output
+  when: FP_package in package_exists.stdout and repo_stat.stat.exists
+
+- debug: msg="{{ install_fixpack_output.stdout }}"
+  when: FP_package in package_exists.stdout and repo_stat.stat.exists

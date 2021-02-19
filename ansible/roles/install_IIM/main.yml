@@ -1,0 +1,8 @@
+---
+- name: Instalation of IM
+  become: true
+  become_user: root
+  shell: '{{IM_repo_path}}/installc -installationDirectory {{IM_install_path}} -dataLocation {{IM_install_data_path}} -acceptLicense'
+  register: IM_install_output
+- debug: msg="{{ IM_install_output.stdout }}"
+

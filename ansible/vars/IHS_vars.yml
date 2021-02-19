@@ -1,0 +1,4 @@
+IHS_package: "com.ibm.websphere.IHS.v85_8.5.5000.20130514_1044"
+IHS_install_path: "/opt/IBM/IHS"
+PLG_package: "com.ibm.websphere.PLG.v85_8.5.5000.20130514_1044"
+PLG_install_path: "/opt/IBM/PLG"

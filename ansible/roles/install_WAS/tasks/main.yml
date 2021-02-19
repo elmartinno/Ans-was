@@ -1,0 +1,16 @@
+- name: check packages
+  become: true
+  become_user: root
+  shell: '{{IM_install_path}}/eclipse/tools/imcl listAvailablePackages -repositories /opt/repo/WASND_v8.5.5/repository.config'
+  register: was_package
+
+- debug: msg="{{ was_package.stdout }}"
+
+- name: Instalation of WAS
+  become: true
+  become_user: root
+  shell: '{{IM_install_path}}/eclipse/tools/imcl install {{was_package.stdout}} -repositories /opt/repo/WASND_v8.5.5/repository.config -installationDirectory {{WAS_install_path}} -acceptLicense -showProgress'
+  register: WAS_install_output
+
+- debug: msg="{{ WAS_install_output.stdout }}"
+

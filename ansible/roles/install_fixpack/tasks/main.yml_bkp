@@ -1,0 +1,20 @@
+- name: unzip fp repo
+  become: true
+  become_user: root
+  shell: cd "{{FP_repo}}"; unzip \*.zip
+  register: unzip_output
+
+- name: install fixpack
+  become: true
+  become_user: root
+  shell: '{{IM_install_path}}/eclipse/tools/imcl install {{FP_package}} -repositories {{FP_repo}}/repository.config -acceptLicense'
+  register: install_fixpack_output
+
+- debug: msg="{{ install_fixpack_output.stdout }}"
+
+- name: delete unzipped files
+  become: true
+  become_user: root
+  shell: cd /opt/repo/8.5.5-WS-WAS-FP015; rm -rf !(*.zip)
+  register: unzip_output
+

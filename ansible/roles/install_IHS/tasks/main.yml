@@ -1,0 +1,16 @@
+- name: Instalation of IHS
+  become: true
+  become_user: root
+  shell: '{{IM_install_path}}/eclipse/tools/imcl install {{IHS_package}} -repositories /opt/repo/WAS_V8.5.5_SUPPL/repository.config -installationDirectory {{IHS_install_path}} -properties user.ihs.httpPort=80 -acceptLicense'
+  register: IHS_install_output
+
+- debug: msg="{{ IHS_install_output.stdout }}"
+
+- name: Instalation of plugin
+  become: true
+  become_user: root
+  shell: '{{IM_install_path}}/eclipse/tools/imcl install {{PLG_package}} -repositories /opt/repo/WAS_V8.5.5_SUPPL/repository.config -installationDirectory {{PLG_install_path}} -acceptLicense'
+  register: PLG_install_output
+
+- debug: msg="{{ PLG_install_output.stdout }}"
+
